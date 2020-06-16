@@ -1,7 +1,5 @@
 # Similarity Recommender
 
-# Building a predictive model for Recife (Brazil) land slidings
-
 ## Introduction
 
 This a machine learning approach to generate leads for companies based on their portfolio.
