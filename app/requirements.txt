@@ -1,0 +1,10 @@
+streamlit
+pandas
+numpy
+sklearn
+pyclustering.cluster.kmedoids 
+sklearn.metrics 
+random
+gower
+plotly
+umap

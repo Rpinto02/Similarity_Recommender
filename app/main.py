@@ -103,6 +103,7 @@ def load_market():
     df = pd.read_csv('data/market_ETL.csv')
     return df;
 
+
 def main():
     st.title('Similarity Recommender')
     st.markdown("---")
@@ -170,6 +171,7 @@ def main():
             calculating.text('Phew, we finally finished the calculus!')
             X = dissimilarity_matrix
 
+            metrics = st.text('Generating plots for evaluation metrics...')
 
             #creating the lists we'll want to save values to
             medoids_per_k = []#medoids for each number of clusters
@@ -316,7 +318,20 @@ def main():
                                      mode='lines+markers'))
             st.plotly_chart(fig_wss)
 
-            st.markdown("Now comes the fun part, I am going to challenge you to chose the best number of clusters!")
+            metrics.text("Metrics' plots generated.")
+
+            st.markdown("Now comes the fun part, I am going to challenge you to choose the best number of clusters!<br/>"
+                        "However I am going to help you by giving you a few tips:\n"
+                        " * The Silhouette Coefficient is bounded between -1 for incorrect clustering and +1 for highly dense clustering.<br/>"
+                        "Scores around zero indicate overlapping clusters.\n"
+                        " * You'll want to look for a couple of things in the Silhouette plot:\n"
+                        "   * The plot with the less amount of negative values, representing incorrect labeled clients.\n"
+                        "   * The plot where the clusters have a greater area above the mean silhouette score, "
+                        "which means clusters with higher density, in another words closer clients (or alike).\n"
+                        " * The elbow method consists in finding a inflection point in the plot. "
+                        "That is if you picture a bent arm you want to look at the point where the elbow is.<br/>\n"
+                        "I'll help you with an example: from 2 clusters to 3 the dissimilarity drops by 20k, but from 3 to 4 only drops 5k. "
+                        "This means from 3 clusters onwards the dissimilarity 'gains' by having more clusters isn't significative.",unsafe_allow_html=True)
             list_clusters = [0,2,3,4,5,6,7]
             number_clusters = st.selectbox("How many clusters do you want to use?", list_clusters)
             if number_clusters is not 0:
@@ -413,6 +428,13 @@ def main():
 
                 st.plotly_chart(fig_umap_man)
                 graphics.text('3D clusters visualization complete!')
+                st.markdown("**Developer's notes**: <br/>UMAP doesn't have the Gower distance in-built,"
+                        " however it has the Dice and Manhattan distances,"
+                        "which are the distances used by the Gower distance.<br/>"
+                        "So I'have shown the 3D visualization using both distances instead of the distance used"
+                        "to finds clusters.<br/>"
+                        "A future developement would be coding the Gower distance as a custom "
+                            "distance in the UMAP method.",unsafe_allow_html=True)
 
 
                 selection = st.selectbox('Choose a representative client(Medoid)', medoids)
@@ -441,12 +463,12 @@ def main():
     st.sidebar.markdown("---")
     st.sidebar.markdown("[![Github]"
                         "(https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fcdn.iconscout.com%2Ficon%2Ffree%2Fpng-256%2Fgithub-153-675523.png&sp=1594759674Tdf76077b6f2588b1077c86da4bf33f55adb5d35e49be7104e1150f33fceb117a)]"
-                        "(https://github.com/Rpinto02)")
+                        "(https://github.com/Rpinto02/Similarity_Recommender)")
     st.sidebar.markdown("[![Linkedin]"
                          "(https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fcdn.iconscout.com%2Ficon%2Ffree%2Fpng-256%2Flinkedin-42-151143.png&sp=1594758987Ta3a7ba5e5bc165c95644e199516c6fc7a4a136a143d412c97997fa27bd624989)]"
                          "(https://www.linkedin.com/in/rpinto02/)")
     st.sidebar.markdown("[![Codenation]"
-                        "(<img src='file://codenation.png' alt='alt text' width='200'/>)]"
+                        "(assets/codenation.png)]"
                         "(https://codenation.dev)")
 
 
