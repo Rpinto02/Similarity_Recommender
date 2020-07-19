@@ -92,7 +92,7 @@ def calculate_distance(df):
 def load_portfolios():
     df = {
         " ": None,
-        "Portfolio 1": pd.read_csv('data/portfolio1_ETL.csv'),
+        "Portfolio 1": pd.read_csv('https://market-lead-generator.herokuapp.com/data/portfolio1_ETL.csv'),
         "Portfolio 2": pd.read_csv('data/portfolio2_ETL.csv'),
         "Portfolio 3": pd.read_csv('data/portfolio3_ETL.csv'),
     }
@@ -100,7 +100,7 @@ def load_portfolios():
 
 @st.cache
 def load_market():
-    df = pd.read_csv('data/market_ETL.csv')
+    df = pd.read_csv('https://market-lead-generator.herokuapp.com/data/market_ETL.csv')
     return df;
 
 
@@ -134,7 +134,7 @@ def main():
             options =df_target['id'].tolist()
             dic = dict(zip(options, values))
             Id = st.selectbox('Choose a client', options, format_func=lambda x: dic[x])
-            st.write(Id)
+            st.write(" Id: "+Id)
             n_top = st.slider('Select the number of leads you want to look for',0, 5)
             st.text('For showcase purposes the maximum amount of leads was set to 5.')
             if n_top > 0:
@@ -439,7 +439,7 @@ def main():
 
                 selection = st.selectbox('Choose a representative client(Medoid)', medoids)
                 Id = portfolios[portfolio].loc[selection,'id']
-                st.write(Id)
+                st.write("**Client "+str(selection)+" ID:** "+Id)
                 n_top = st.slider('Select the number of leads you want to look for', 0, 5)
                 st.text('For showcase purposes the maximum amount of leads was set to 5.')
                 df_target = portfolios[portfolio]
@@ -462,10 +462,10 @@ def main():
     st.sidebar.title("Useful Links")
     st.sidebar.markdown("---")
     st.sidebar.markdown("[![Github]"
-                        "(https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fcdn.iconscout.com%2Ficon%2Ffree%2Fpng-256%2Fgithub-153-675523.png&sp=1594759674Tdf76077b6f2588b1077c86da4bf33f55adb5d35e49be7104e1150f33fceb117a)]"
+                        "(https://market-lead-generator.herokuapp.com/assets/githublogo.png)]"
                         "(https://github.com/Rpinto02/Similarity_Recommender)")
     st.sidebar.markdown("[![Linkedin]"
-                         "(https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Fcdn.iconscout.com%2Ficon%2Ffree%2Fpng-256%2Flinkedin-42-151143.png&sp=1594758987Ta3a7ba5e5bc165c95644e199516c6fc7a4a136a143d412c97997fa27bd624989)]"
+                         "(assets/linkedinlogo.png)]"
                          "(https://www.linkedin.com/in/rpinto02/)")
     st.sidebar.markdown("[![Codenation]"
                         "(assets/codenation.png)]"

@@ -1,10 +1,10 @@
-streamlit
-pandas
-numpy
-sklearn
-pyclustering.cluster.kmedoids 
-sklearn.metrics 
-random
-gower
-plotly
-umap
+streamlit == 0.62.1
+pandas == 1.0.5
+numpy == 1.19.0
+scikit-learn == 0.23.1
+plotly == 4.8.1
+umap == 0.1.1
+pyclustering == 0.9.3.1
+gower == 0.0.5
+
+
