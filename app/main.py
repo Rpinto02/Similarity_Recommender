@@ -1,15 +1,14 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
 from pyclustering.cluster.kmedoids import kmedoids
 from sklearn.metrics import silhouette_samples
-from sklearn.metrics import silhouette_score
 import random
 import gower
 import plotly.graph_objects as go
 import umap as umap
+
 
 
 
@@ -81,10 +80,10 @@ def calculate_distance(df):
                         'idade_minima_socios',
                         'qt_filiais', 'qt_socios', 'qt_socios_st_regular']
 
-    #normalizing the non boolean columns
+    # normalizing the non boolean columns
     df = min_max_col(df, non_boolean_cols)
 
-    #calculating the gower distance matrix
+    # calculating the gower distance matrix
     dissimilarity_matrix = gower.gower_matrix(df)
     return dissimilarity_matrix;
 
@@ -92,7 +91,7 @@ def calculate_distance(df):
 def load_portfolios():
     df = {
         " ": None,
-        "Portfolio 1": pd.read_csv('https://market-lead-generator.herokuapp.com/data/portfolio1_ETL.csv'),
+        "Portfolio 1": pd.read_csv('data/portfolio1_ETL.csv'),
         "Portfolio 2": pd.read_csv('data/portfolio2_ETL.csv'),
         "Portfolio 3": pd.read_csv('data/portfolio3_ETL.csv'),
     }
@@ -100,7 +99,7 @@ def load_portfolios():
 
 @st.cache
 def load_market():
-    df = pd.read_csv('https://market-lead-generator.herokuapp.com/data/market_ETL.csv')
+    df = pd.read_csv('data/market_sample.csv')
     return df;
 
 
@@ -109,10 +108,8 @@ def main():
     st.markdown("---")
     st.text("This is a lead generator according to a company's portfolio.")
 
-
     Choices = st.sidebar.selectbox("Do you have a client you wish to generate leads from?",
     [" ","Yes","No"])
-
 
     if Choices == "Yes":
         st.sidebar.title("Lead Generator")
@@ -134,7 +131,7 @@ def main():
             options =df_target['id'].tolist()
             dic = dict(zip(options, values))
             Id = st.selectbox('Choose a client', options, format_func=lambda x: dic[x])
-            st.write(" Id: "+Id)
+            st.write(" **Id**: "+Id)
             n_top = st.slider('Select the number of leads you want to look for',0, 5)
             st.text('For showcase purposes the maximum amount of leads was set to 5.')
             if n_top > 0:
@@ -165,7 +162,6 @@ def main():
             st.subheader("Market Database")
             st.dataframe(market_ID.head(5))
 
-
             calculating = st.text('Calculating the dissimilarity matrix! This may take a while...')
             dissimilarity_matrix = calculate_distance(portfolios[portfolio])
             calculating.text('Phew, we finally finished the calculus!')
@@ -173,45 +169,45 @@ def main():
 
             metrics = st.text('Generating plots for evaluation metrics...')
 
-            #creating the lists we'll want to save values to
-            medoids_per_k = []#medoids for each number of clusters
-            clusters_per_k = []#clusters for each number of clusters
-            k_scores = []#average silhouette score of k clusters
-            wss = []#the sum of dissimilarity of each cluster
+            # creating the lists we'll want to save values to
+            medoids_per_k = []  # medoids for each number of clusters
+            clusters_per_k = []  # clusters for each number of clusters
+            k_scores = []  # average silhouette score of k clusters
+            wss = []  # the sum of dissimilarity of each cluster
 
             random.seed(42)
             for i, k in enumerate([2, 3, 4, 5, 6, 7]):
 
-                #the medoids algorithm requires an initial point to start so we're setting it here
+                # the medoids algorithm requires an initial point to start so we're setting it here
                 initial_medoids_km = random.sample(range(1,portfolios[portfolio].shape[0]), k)
 
                 # Run the Kmeans algorithm
                 km = kmedoids(X, initial_medoids_km, data_type='distance_matrix')
                 km.process()
 
-                #saving the created clusters into a list
+                # saving the created clusters into a list
                 clusters_km = km.get_clusters()
                 clusters_per_k.append(clusters_km)
 
-                #saving the medoids that were found
+                # saving the medoids that were found
                 medoids_km = km.get_medoids()
 
-                #saving the medoids that were found per each number of clusters into a list
+                # saving the medoids that were found per each number of clusters into a list
                 medoids_per_k.append(medoids_km)
 
-                #creating a dataframe with the labels of each cluster
+                # creating a dataframe with the labels of each cluster
                 labels_km = pd.Series(0, index=range(0, portfolios[portfolio].shape[0]))
                 for i in range(0, len(clusters_km)):
                     for n in range(0, len(clusters_km[i])):
                         index = clusters_km[i][n]
                         labels_km.iloc[index] = i
 
-                #getting the sum of the dissimilarity per cluster
+                # getting the sum of the dissimilarity per cluster
                 clusters_distances = []
                 for n in range(0, len(clusters_km)):
                     clusters_distances.append(X[medoids_km[n]][labels_km[labels_km == n].index].sum())
 
-                #total sum of the dissimilarity
+                # total sum of the dissimilarity
                 wss.append(sum(clusters_distances))
 
                 # Get silhouette samples
@@ -265,15 +261,13 @@ def main():
                     y_lower += len(cluster_silhouette_vals)
                 fig.update_layout(annotations=annotations)
 
-
-
                 # Get the average silhouette score
                 avg_score = np.mean(silhouette_vals)
 
-                #saving the average silhouette score of k clusters in a list
+                # saving the average silhouette score of k clusters in a list
                 k_scores.append(avg_score)
 
-                #plottting the average silhouette score
+                # plottting the average silhouette score
                 fig.update_layout(shapes=[
                     dict(
                         type='line',
@@ -284,7 +278,7 @@ def main():
                 ])
                 fig.update_yaxes(showticklabels=False)
 
-                #plotting the graphs created in streamlit
+                # plotting the graphs created in streamlit
                 st.plotly_chart(fig)
 
             fig_wss = go.Figure()
@@ -315,28 +309,35 @@ def main():
 
             )
             fig_wss.add_trace(go.Scatter(x=list(range(2, 8)), y=wss,
-                                     mode='lines+markers'))
+                                         mode='lines+markers'))
             st.plotly_chart(fig_wss)
 
             metrics.text("Metrics' plots generated.")
 
-            st.markdown("Now comes the fun part, I am going to challenge you to choose the best number of clusters!<br/>"
+            st.markdown("Now comes the fun part, I am going to challenge you to choose the best "
+                        "number of clusters!<br/>"
                         "However I am going to help you by giving you a few tips:\n"
-                        " * The Silhouette Coefficient is bounded between -1 for incorrect clustering and +1 for highly dense clustering.<br/>"
+                        " * The Silhouette Coefficient is bounded between -1 for incorrect clustering "
+                        "and +1 for highly dense "
+                        "clustering.<br/>"
                         "Scores around zero indicate overlapping clusters.\n"
                         " * You'll want to look for a couple of things in the Silhouette plot:\n"
-                        "   * The plot with the less amount of negative values, representing incorrect labeled clients.\n"
+                        "   * The plot with the less amount of negative values, representing incorrect "
+                        "labeled clients.\n"
                         "   * The plot where the clusters have a greater area above the mean silhouette score, "
                         "which means clusters with higher density, in another words closer clients (or alike).\n"
                         " * The elbow method consists in finding a inflection point in the plot. "
                         "That is if you picture a bent arm you want to look at the point where the elbow is.<br/>\n"
-                        "I'll help you with an example: from 2 clusters to 3 the dissimilarity drops by 20k, but from 3 to 4 only drops 5k. "
-                        "This means from 3 clusters onwards the dissimilarity 'gains' by having more clusters isn't significative.",unsafe_allow_html=True)
+                        "I'll help you with an example: from 2 clusters to 3 the dissimilarity drops by 20k,"
+                        " but from 3 to 4 only drops 5k. "
+                        "This means from 3 clusters onwards the dissimilarity 'gains' "
+                        "by having more clusters isn't significative.",unsafe_allow_html=True)
             list_clusters = [0,2,3,4,5,6,7]
             number_clusters = st.selectbox("How many clusters do you want to use?", list_clusters)
             if number_clusters is not 0:
                 graphics = st.text("Creating shiny plots...")
-                medoids = medoids_per_k[number_clusters-2]#The medoids and clusters lists starts at index 0 which is with 2 clusters, and finishes at 5, 7 clusters thus the -2
+                medoids = medoids_per_k[number_clusters-2]  # The medoids and clusters lists starts at index 0 which
+                # is with 2 clusters, and finishes at 5, 7 clusters thus the -2
                 clusters = clusters_per_k[number_clusters-2]
                 fit_umap = umap.UMAP(n_neighbors=14, min_dist=0.1, n_components=3, metric='dice', random_state=42)
                 p_umap = fit_umap.fit_transform(portfolios[portfolio].drop(columns=['id']))
@@ -346,18 +347,18 @@ def main():
                 fig_umap = go.Figure()
                 for i in range(0,number_clusters):
                     fig_umap.add_trace(go.Scatter3d(x=p_umap[clusters[i], 0],
-                                               y=p_umap[clusters[i], 1],
-                                               z=p_umap[clusters[i], 2],
-                                               name='Cluster '+str(i),
-                                               mode='markers'))
+                                                    y=p_umap[clusters[i], 1],
+                                                    z=p_umap[clusters[i], 2],
+                                                    name='Cluster '+str(i),
+                                                    mode='markers'))
 
                 fig_umap.add_trace(go.Scatter3d(x=p_umap[medoids, 0],
-                                           y=p_umap[medoids, 1],
-                                           z=p_umap[medoids, 2],
-                                           name='Medoids',
-                                           mode='markers',
-                                           marker_color="rgb(255,255,0)",
-                                           marker=dict(size=16)))
+                                                y=p_umap[medoids, 1],
+                                                z=p_umap[medoids, 2],
+                                                name='Medoids',
+                                                mode='markers',
+                                                marker_color="rgb(255,255,0)",
+                                                marker=dict(size=16)))
 
                 fig_umap.update_layout(
                     title={
@@ -390,18 +391,18 @@ def main():
                 fig_umap_man = go.Figure()
                 for i in range(0, number_clusters):
                     fig_umap_man.add_trace(go.Scatter3d(x=p_umap_man[clusters[i], 0],
-                                                    y=p_umap_man[clusters[i], 1],
-                                                    z=p_umap_man[clusters[i], 2],
-                                                    name='Cluster ' + str(i),
-                                                    mode='markers'))
+                                                        y=p_umap_man[clusters[i], 1],
+                                                        z=p_umap_man[clusters[i], 2],
+                                                        name='Cluster ' + str(i),
+                                                        mode='markers'))
 
                 fig_umap_man.add_trace(go.Scatter3d(x=p_umap_man[medoids, 0],
-                                                y=p_umap_man[medoids, 1],
-                                                z=p_umap_man[medoids, 2],
-                                                name='Medoids',
-                                                mode='markers',
-                                                marker_color="rgb(255,255,0)",
-                                                marker=dict(size=16)))
+                                                    y=p_umap_man[medoids, 1],
+                                                    z=p_umap_man[medoids, 2],
+                                                    name='Medoids',
+                                                    mode='markers',
+                                                    marker_color="rgb(255,255,0)",
+                                                    marker=dict(size=16)))
 
                 fig_umap_man.update_layout(
                     title={
@@ -429,13 +430,12 @@ def main():
                 st.plotly_chart(fig_umap_man)
                 graphics.text('3D clusters visualization complete!')
                 st.markdown("**Developer's notes**: <br/>UMAP doesn't have the Gower distance in-built,"
-                        " however it has the Dice and Manhattan distances,"
-                        "which are the distances used by the Gower distance.<br/>"
-                        "So I'have shown the 3D visualization using both distances instead of the distance used"
-                        "to finds clusters.<br/>"
-                        "A future developement would be coding the Gower distance as a custom "
+                            " however it has the Dice and Manhattan distances,"
+                            "which are the distances used by the Gower distance.<br/>"
+                            "So I have shown the 3D visualization using both distances instead of the distance used"
+                            "to finds clusters.<br/>"
+                            "A future development would be coding the Gower distance as a custom "
                             "distance in the UMAP method.",unsafe_allow_html=True)
-
 
                 selection = st.selectbox('Choose a representative client(Medoid)', medoids)
                 Id = portfolios[portfolio].loc[selection,'id']
@@ -455,27 +455,16 @@ def main():
 
                         st.markdown('**Dissimalirity**: ' + str(round(NN_ID.get('values')[i], 5)))
 
-
-
-
-
     st.sidebar.title("Useful Links")
     st.sidebar.markdown("---")
-    st.sidebar.markdown("[![Github]"
-                        "(https://market-lead-generator.herokuapp.com/assets/githublogo.png)]"
+    st.sidebar.markdown("[Github]"
                         "(https://github.com/Rpinto02/Similarity_Recommender)")
-    st.sidebar.markdown("[![Linkedin]"
-                         "(assets/linkedinlogo.png)]"
-                         "(https://www.linkedin.com/in/rpinto02/)")
-    st.sidebar.markdown("[![Codenation]"
-                        "(assets/codenation.png)]"
+    st.sidebar.markdown("[Linkedin]"
+                        "(https://www.linkedin.com/in/rpinto02/)")
+    st.sidebar.markdown("[Codenation]"
                         "(https://codenation.dev)")
 
 
-
-
-
-
-
 if __name__ == '__main__':
+
     main()
