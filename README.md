@@ -37,6 +37,7 @@ Finally follow the instructions below to run the app.
 streamlit run main.py
 ```
 * Alternatively you can visit the [website](https://market-lead-generator.herokuapp.com/)
+**Sidenote** due to Heroku free restrictions only a sample of the database was deployed to showcase the project. However the app works properly with the whole database.
 
 ### Project presentation
 A video with the presentation of the project with details behind the several decisions taken throught the development can be found here.
@@ -88,6 +89,7 @@ Finalmente siga as instruções abaixo para correr a aplicação web.
 streamlit run main.py
 ```
 * Alternativamente pode visitar o [website](https://market-lead-generator.herokuapp.com/)
+**Nota** devido às restrições da versão grátis do Heroku apenas uma amostra da base dados foi lançada no app. No entanto ela funciona devidamente com toda a base de dados.
 
 
 ### Apresentação do projeto
