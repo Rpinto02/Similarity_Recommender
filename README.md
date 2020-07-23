@@ -17,6 +17,7 @@ This a machine learning approach to generate leads for companies based on their 
 * Umap-learn 0.4.5
 * Pyclustering 0.9.3.1
 * [Gower](https://github.com/wwwjk366/gower) 0.0.5
+
 **Warning** other dependencies are needed if you want to explore the old models, however they are not used in the program.
 
 ### Instructions
@@ -37,6 +38,7 @@ Finally follow the instructions below to run the app.
 streamlit run main.py
 ```
 * Alternatively you can visit the [website](https://market-lead-generator.herokuapp.com/)
+
 **Sidenote** due to Heroku free restrictions only a sample of the database was deployed to showcase the project. However the app works properly with the whole database.
 
 ### Project presentation
@@ -69,6 +71,7 @@ Este repositório é uma tentativa de usar aprendizado de máquina para gerar le
 * Umap-learn 0.4.5
 * Pyclustering 0.9.3.1
 * [Gower](https://github.com/wwwjk366/gower) 0.0.5
+
 **Aviso** outras dependências são necessárias para explorar os modelos antigos, no entanto elas não são usadas no programa. 
 
 ### Instruções
@@ -89,6 +92,7 @@ Finalmente siga as instruções abaixo para correr a aplicação web.
 streamlit run main.py
 ```
 * Alternativamente pode visitar o [website](https://market-lead-generator.herokuapp.com/)
+
 **Nota** devido às restrições da versão grátis do Heroku apenas uma amostra da base dados foi lançada no app. No entanto ela funciona devidamente com toda a base de dados.
 
 
