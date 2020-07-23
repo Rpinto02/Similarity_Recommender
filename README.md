@@ -4,6 +4,8 @@
 
 This a machine learning approach to generate leads for companies based on their portfolio.
 
+<img src="https://github.com/Rpinto02/Similarity_Recommender/blob/master/assets/webapp_option1.jpg" width="425"/> <img src="https://github.com/Rpinto02/Similarity_Recommender/blob/master/assets/webapp_option2.jpg" width="425"/>
+
 ## Getting Started
 
 ### Dependencies
@@ -58,6 +60,8 @@ Please open issues on github to report bugs or make feature requests.
 # Introdução
 
 Este repositório é uma tentativa de usar aprendizado de máquina para gerar leads para empresas baseado no seu portfolio.
+
+<img src="https://github.com/Rpinto02/Similarity_Recommender/blob/master/assets/webapp_option1.jpg" width="425"/> <img src="https://github.com/Rpinto02/Similarity_Recommender/blob/master/assets/webapp_option2.jpg" width="425"/>
 
 ## Como Começar
 ### Dependências
