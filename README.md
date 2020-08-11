@@ -45,6 +45,7 @@ streamlit run main.py
 
 ### Project presentation
 A video with the presentation of the project with details behind the several decisions taken throught the development can be found [here](https://youtu.be/82To-s2dl2o).
+As well as an article on how to chose the right distance metric [here](https://medium.com/@rpinto02/this-is-why-understanding-which-distance-to-use-is-key-74be2ae28bb3).
 
 ## License
 [MIT](https://opensource.org/licenses/MIT)
@@ -101,6 +102,7 @@ streamlit run main.py
 
 ### Apresentação do projeto
 Um video com a apresentação do projeto em inglês contendo detalhes por detrás das decisões tomadas durante o desenvolvimento pode ser encontrado [aqui](https://youtu.be/82To-s2dl2o).
+Também pode encontrar um artigo falando em como escolher a melhor distância em português [aqui](https://medium.com/data-hackers/entendendo-porque-%C3%A9-que-a-dist%C3%A2ncia-certa-faz-toda-a-diferen%C3%A7a-648030c9bae2).
 
 ## Licença
 [MIT](https://opensource.org/licenses/MIT)
